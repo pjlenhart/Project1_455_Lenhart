@@ -5,7 +5,8 @@ package edu.towson.cosc.cosc455.plenha1.project1
   */
 class MyLexicalAnalyzer extends LexicalAnalyzer {
 
-  List<String> lexems =
+
+
   override def addChar(): Unit = {
 
   }

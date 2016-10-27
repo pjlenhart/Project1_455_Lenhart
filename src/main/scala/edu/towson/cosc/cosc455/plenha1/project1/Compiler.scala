@@ -12,13 +12,16 @@ object Compiler{
 
   val Scanner = new MyLexicalAnalyzer
   val Parser = new MySyntaxAnalyzer
-  val SemanticAnalyzer = new MySyntaxAnalyzer
+  val SemanticAnalyzer = new MySemanticAnalyzer
 
   def main(args: Array[String]): Unit = {
     checkFile(args)
     readFile(args(0))
 
     Scanner.getNextToken()
+    Parser.gittex()
+    //......//
+    SemanticAnalyzer.openHTMLFileInBrowser("output.html")
 
   }
 
