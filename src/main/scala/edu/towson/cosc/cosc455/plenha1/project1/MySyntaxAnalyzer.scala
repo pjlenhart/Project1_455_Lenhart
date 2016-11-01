@@ -59,7 +59,7 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
       link()
       innerItem()
     }else {
-      reqText()
+      //reqText()
       innerItem()
     }
   }
@@ -90,7 +90,7 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
       newline()
       innerText()
     }else{
-      text()
+      //text()
       innerText()
     }
   }
@@ -103,7 +103,7 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
       println("Syntax Error")
       System.exit(1)
     }
-    reqText()
+    //reqText()
     if(Compiler.currentToken.equalsIgnoreCase(CONSTANTS.BRACKETE)){
       parseTree.push(CONSTANTS.BRACKETE)
       Compiler.Scanner.getNextToken()
@@ -118,7 +118,7 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
       println("Syntax Error")
       System.exit(1)
     }
-    reqText()
+    //reqText()
     if(Compiler.currentToken.equalsIgnoreCase(CONSTANTS.ADDRESSE)){
       parseTree.push(CONSTANTS.ADDRESSE)
       Compiler.Scanner.getNextToken()
@@ -136,12 +136,11 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
       println("Syntax Error")
       System.exit(1)
     }
-    text()
+    //text()
   }
 
   override def body(): Unit = {
-    if(Compiler.
-    body()
+
   }
 
   override def bold(): Unit = {
@@ -152,7 +151,7 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
       println("Syntax Error")
       System.exit(1)
     }
-    text()
+    //text()
   }
 
   override def newline(): Unit = {
@@ -169,7 +168,7 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
     if(Compiler.currentToken.equalsIgnoreCase(CONSTANTS.TITLEB)){
       parseTree.push(CONSTANTS.TITLEB)
       Compiler.Scanner.getNextToken()
-      reqText()
+      //reqText()
       if(Compiler.currentToken.equalsIgnoreCase(CONSTANTS.BRACKETE)){
         parseTree.push(CONSTANTS.BRACKETE)
         Compiler.Scanner.getNextToken()
@@ -184,11 +183,11 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
     if(Compiler.currentToken.equalsIgnoreCase(CONSTANTS.DEFB)){
       parseTree.push(CONSTANTS.DEFB)
       Compiler.Scanner.getNextToken()
-      reqText()
+      //reqText()
       if(Compiler.currentToken.equalsIgnoreCase(CONSTANTS.EQSIGN)){
         parseTree.push(CONSTANTS.EQSIGN)
         Compiler.Scanner.getNextToken()
-        reqText()
+        //reqText()
         if(Compiler.currentToken.equalsIgnoreCase(CONSTANTS.BRACKETE)){
           parseTree.push(CONSTANTS.BRACKETE)
           Compiler.Scanner.getNextToken()
@@ -215,7 +214,7 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
       println("Syntax Error")
       System.exit(1)
     }
-    reqText()
+    //reqText()
     if(Compiler.currentToken.equalsIgnoreCase(CONSTANTS.BRACKETE)){
       parseTree.push(CONSTANTS.BRACKETE)
       Compiler.Scanner.getNextToken()
@@ -230,7 +229,7 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
       println("Syntax Error")
       System.exit(1)
     }
-    reqText()
+    //reqText()
     if(Compiler.currentToken.equalsIgnoreCase(CONSTANTS.ADDRESSE)){
       parseTree.push(CONSTANTS.ADDRESSE)
       Compiler.Scanner.getNextToken()
@@ -248,7 +247,7 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
       println("Syntax Error")
       System.exit(1)
     }
-    reqText()
+    //reqText()
     if(Compiler.currentToken.equalsIgnoreCase(CONSTANTS.BRACKETE)){
       parseTree.push(CONSTANTS.BRACKETE)
       Compiler.Scanner.getNextToken()
@@ -266,7 +265,7 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
       println("Syntax Error")
       System.exit(1)
     }
-      reqText()
+      //reqText()
   }
 
   override def listItem(): Unit = {
@@ -279,81 +278,6 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
     }
     innerItem()
     listItem()
-  }
-
-
-  def text(): Unit = {
-    letters()
-    numbers()
-    specials()
-  }
-
-  def reqText(): Unit = {
-    val specialList: List[String] = List("," , "." , ":" , "?" , "_" , " \" ")
-    for(reqText <- 'A' to 'Z', '0' to '9', j <- 0 until specialList.length-1)
-  }
-
-  def letters(): Unit = {
-    for(letters <- 'A' to 'Z'){
-      if(Compiler.currentToken.equals(letters)){
-        val charStr = letters.toString
-        parseTree.push(charStr)
-      }
-    }
-  }
-
-  def numbers(): Unit = {
-    for(numbers <- '0' to '9'){
-      if(Compiler.currentToken.equals(numbers)){
-        val numStr = numbers.toString
-        parseTree.push(numStr)
-      }
-    }
-  }
-
-  def specials(): Unit = {
-    val specialList: List[String] = List("," , "." , ":" , "?" , "_" , " \" ")
-    for(j <- 0 until specialList.length-1){
-      if(Compiler.currentToken.equals(specialList{j})){
-        parseTree.push(specialList{j})
-      }
-    }
-  }
-
-  def reqLetters(): Unit = {
-    for(letters <- 'A' to 'Z'){
-      if(Compiler.currentToken.equals(letters)){
-        val charStr = letters.toString
-        parseTree.push(charStr)
-      }else{
-        println("Syntax Error")
-        System.exit(1)
-      }
-    }
-  }
-
-  def reqNumbers(): Unit = {
-    for(numbers <- '0' to '9'){
-      if(Compiler.currentToken.equals(numbers)){
-        val numStr = numbers.toString
-        parseTree.push(numStr)
-      }else{
-        println("Syntax Error")
-        System.exit(1)
-      }
-    }
-  }
-
-  def reqSpecials(): Unit = {
-    val specialList: List[String] = List("," , "." , ":" , "?" , "_" , " \" ")
-    for(j <- 0 until specialList.length-1){
-      if(Compiler.currentToken.equals(specialList{j})){
-        parseTree.push(specialList{j})
-      }else{
-        println("Syntax Error")
-        System.exit(1)
-      }
-    }
   }
 }
 

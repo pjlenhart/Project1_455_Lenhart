@@ -19,9 +19,9 @@ object Compiler{
     readFile(args(0))
 
     Scanner.getNextToken()
-    Parser.gittex()
+    //Parser.gittex()
     //......//
-    SemanticAnalyzer.openHTMLFileInBrowser("output.html")
+    //SemanticAnalyzer.openHTMLFileInBrowser("output.html")
 
   }
 
