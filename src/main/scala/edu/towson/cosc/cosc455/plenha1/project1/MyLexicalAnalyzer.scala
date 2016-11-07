@@ -9,24 +9,24 @@ import scala.collection.mutable
 
 class MyLexicalAnalyzer extends LexicalAnalyzer {
 
-  val lexems: List[String] = List("\\BEGIN","\\END", "\\TITLE[","]", "#", "\\PARB",
-                  "\\PARE", "**", "*", "+", "\\", "[", "(", ")", "![",
-                  "\\DEF[", "=", "\\USE[")
-  var pos : Int = -1
-  var candidate : Char = ' '
-  var currentString : String = " "
-  val lexicalStack = new mutable.Queue[Char]()
+  val lexems: List[String] = List("\\BEGIN", "\\END", "\\TITLE[", "]", "#", "\\PARB",
+    "\\PARE", "**", "*", "+", "\\", "[", "(", ")", "![",
+    "\\DEF[", "=", "\\USE[")
+  //a list of acceptable lexemes that are allowed by the language
+  var pos: Int = -1
+  //the index of the Big string of input
+  var candidate: Char = ' '
+  //the character in question, will be checked against the grammar
+  var currentString: String = " " //the potential string which will be a token that is fully checked against the grammar
 
 
   override def addChar(): Unit = {
-    lexicalStack.enqueue(candidate)
-    currentString = lexicalStack.mkString
-    //println(currentString)
+    currentString = currentString + candidate
   }
 
-  override def lookup(candidateToken : String): Boolean = {
+  override def lookup(candidateToken: String): Boolean = {
     var flag = false
-    if(lexems.contains(currentString)){
+    if (lexems.contains(currentString)) {
       flag = true
     }
     flag
@@ -34,32 +34,56 @@ class MyLexicalAnalyzer extends LexicalAnalyzer {
   }
 
   override def getNextToken(): Unit = {
-    candidate  = getChar()
-    if(candidate.equals(' ')){
-      while(candidate.equals(' ')){
+    candidate = getChar()
+    while (candidate.equals(' ')) {
+      candidate = getChar()
+    }
+    while(!candidate.equals(' ')){
+      if(candidate.equals('\\') || candidate.equals('#') || candidate.equals('*') || candidate.equals('[') ||
+        candidate.equals('!') || candidate.equals('+') || candidate.equals('\r') || candidate.equals('\n')) {
+        addChar()
+        candidate = getChar()
+        println(currentString)
+        if (lookup(currentString)) {
+          Compiler.currentToken.equals(currentString)
+        } else {
+          println("Lexical Error- Token Not Found.")
+          System.exit(1)
+        }
+      }
+    }
+
+    if(text()){
+      while(text()){
+        addChar()
         candidate = getChar()
       }
-    }
-    else if(candidate.equals('\\') || candidate.equals('#') || candidate.equals('*') || candidate.equals('[') ||
-              candidate.equals('!') || candidate.equals('+')){
-      addChar()
-      candidate = getChar()
-      while(!(candidate.equals('\\') || candidate.equals('#') || candidate.equals('*') || candidate.equals('[') ||
-        candidate.equals('!') || candidate.equals('+') || candidate.equals('\r') || candidate.equals('\n'))){
-        addChar();
-        candidate = getChar();
-      }
-      println(currentString)
-      if(lookup(currentString)){
-        Compiler.currentToken == currentString
-      }
-      else{
-        println("Lexical Error- Token Not Found.")
-        System.exit(1)
+    }else{
+      println("Lexical Error - Your Token cannot be processed.")
+      System.exit(1)
     }
 
-    }
+  }
 
+  def text() : Boolean = {
+    var isText : Boolean = false
+    for(ch <- 'A' to 'Z'){
+      if(candidate.equals(ch))
+        isText = true
+    }
+    for(ch <- 'a' to 'z'){
+      if(candidate.equals(ch))
+        isText = true
+    }
+    for(ch <- '0' to '9'){
+      if(candidate.equals(ch))
+        isText = true
+    }
+    if(candidate.equals(',') || candidate.equals('.') || candidate.equals('?') || candidate.equals('_')
+        || candidate.equals('!') || candidate.equals('"') || candidate.equals(' ')){
+      isText = true
+    }
+    false
   }
 
   override def getChar(): Char = {
