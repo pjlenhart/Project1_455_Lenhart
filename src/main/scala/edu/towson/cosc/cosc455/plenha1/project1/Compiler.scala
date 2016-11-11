@@ -9,6 +9,7 @@ object Compiler{
 
   var currentToken : String = ""
   var fileContents : String = ""
+  var output : String = ""
 
   val Scanner = new MyLexicalAnalyzer
   val Parser = new MySyntaxAnalyzer
@@ -19,7 +20,7 @@ object Compiler{
     readFile(args(0))
 
     Scanner.getNextToken()
-    //Parser.gittex()
+    Parser.gittex()
     //......//
     //SemanticAnalyzer.openHTMLFileInBrowser("output.html")
 

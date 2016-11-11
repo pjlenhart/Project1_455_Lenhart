@@ -7,7 +7,7 @@ trait LexicalAnalyzer {
   def addChar() : Unit
   def getChar() : Char
   def getNextToken() : Unit
-  def lookup(candidateToken : String) : Boolean = {
+  def lookup() : Boolean = {
     println("this is lookup implementation!")
     true
   }

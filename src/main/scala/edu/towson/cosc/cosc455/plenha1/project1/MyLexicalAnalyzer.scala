@@ -17,14 +17,14 @@ class MyLexicalAnalyzer extends LexicalAnalyzer {
   //the index of the Big string of input
   var candidate: Char = ' '
   //the character in question, will be checked against the grammar
-  var currentString: String = " " //the potential string which will be a token that is fully checked against the grammar
+  var currentString: String = "" //the potential string which will be a token that is fully checked against the grammar
 
 
   override def addChar(): Unit = {
     currentString = currentString + candidate
   }
 
-  override def lookup(candidateToken: String): Boolean = {
+  override def lookup(): Boolean = {
     var flag = false
     if (lexems.contains(currentString)) {
       flag = true
@@ -35,31 +35,42 @@ class MyLexicalAnalyzer extends LexicalAnalyzer {
 
   override def getNextToken(): Unit = {
     candidate = getChar()
-    while (candidate.equals(' ')) {
+    while (candidate.equals(' ') || candidate.equals('\r') || candidate.equals('\n')) {
       candidate = getChar()
     }
-    while(!candidate.equals(' ')){
-      if(candidate.equals('\\') || candidate.equals('#') || candidate.equals('*') || candidate.equals('[') ||
-        candidate.equals('!') || candidate.equals('+') || candidate.equals('\r') || candidate.equals('\n')) {
+    if(candidate.equals('\\') || candidate.equals('#') || candidate.equals('*') || candidate.equals('+')
+        || candidate.equals('!') || candidate.equals('[') || candidate.equals(']')){
+      addChar()
+      candidate = getChar()
+      while(!(candidate.equals('\n') || candidate.equals('\r') || candidate.equals('['))){
         addChar()
-        candidate = getChar()
         println(currentString)
-        if (lookup(currentString)) {
-          Compiler.currentToken.equals(currentString)
-        } else {
-          println("Lexical Error- Token Not Found.")
-          System.exit(1)
-        }
+        candidate = getChar()
       }
-    }
+      if(candidate.equals('[')){
+        addChar()
+      }
+      if(lookup()){
+        Compiler.currentToken = currentString
+        currentString = ""
+      }else{
+        println(currentString)
+        println("Lexical error you idiot")
+        System.exit(1)
+      }
 
-    if(text()){
+    }else if (text()){
       while(text()){
+        println(currentString)
         addChar()
         candidate = getChar()
       }
-    }else{
-      println("Lexical Error - Your Token cannot be processed.")
+      Compiler.currentToken = currentString
+      currentString = ""
+    }
+    else{
+      println(currentString)
+      println("Lexical error - no valid token presented")
       System.exit(1)
     }
 

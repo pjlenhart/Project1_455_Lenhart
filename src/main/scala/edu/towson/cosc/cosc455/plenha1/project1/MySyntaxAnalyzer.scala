@@ -8,18 +8,20 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
   var parseTree = new scala.collection.mutable.Stack[String]
 
   override def gittex(): Unit = {
+    println(Compiler.currentToken)
     if (Compiler.currentToken.equalsIgnoreCase(CONSTANTS.DOCB)){
       parseTree.push(Compiler.currentToken)
       Compiler.Scanner.getNextToken()
-      variableDefine()
+      //variableDefine()
+      //println(Compiler.currentToken)
       title()
-      body()
+      //body()
       if(Compiler.currentToken.equalsIgnoreCase(CONSTANTS.DOCE)){
 
       }
     }
     else {
-      println("Error")
+      println("gittex Error")
       System.exit(1)
     }
   }
@@ -168,10 +170,13 @@ class MySyntaxAnalyzer extends SyntaxAnalyzer{
     if(Compiler.currentToken.equalsIgnoreCase(CONSTANTS.TITLEB)){
       parseTree.push(CONSTANTS.TITLEB)
       Compiler.Scanner.getNextToken()
-      //reqText()
+      //text
       if(Compiler.currentToken.equalsIgnoreCase(CONSTANTS.BRACKETE)){
         parseTree.push(CONSTANTS.BRACKETE)
         Compiler.Scanner.getNextToken()
+      }else{
+        println("Syntax Error - missing ]")
+        System.exit(1)
       }
     }else {
       println("Syntax Error")
