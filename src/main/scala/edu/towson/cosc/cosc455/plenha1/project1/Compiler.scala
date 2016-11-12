@@ -21,8 +21,7 @@ object Compiler{
 
     Scanner.getNextToken()
     Parser.gittex()
-    //......//
-    //SemanticAnalyzer.openHTMLFileInBrowser("output.html")
+    SemanticAnalyzer.semantics()
 
   }
 

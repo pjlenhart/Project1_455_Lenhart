@@ -14,68 +14,89 @@ class MySemanticAnalyzer {
   val Scanner = new MyLexicalAnalyzer
 
   def semantics(): Unit = {
-    tree match{
-      case "DOCB" ::stack =>
-        resolvedTree = "<!DOCTYPE html>\n<html>\n<head>\n" ::resolvedTree
-        tree = stack
-      case "DOCE"::stack =>
-        resolvedTree = "</body>\n</html>"::resolvedTree
-        tree = stack
-      case "TITLEB"::stack =>
-        resolvedTree = "<title>"::resolvedTree
-        tree = stack
-      case "PARAB"::stack =>
-        resolvedTree = "<p>\n"::resolvedTree
-        tree = stack
-      case "PARAE"::stack =>
-        resolvedTree = "</p>\n"::resolvedTree
-        tree = stack
-      case "ITALICSB"::stack =>
-        resolvedTree = "<em>"::resolvedTree
-        tree = stack
-      case "ITALICSE"::stack =>
-        resolvedTree = "</em>"::resolvedTree
-        tree = stack
-      case "BOLDB"::stack =>
-        resolvedTree = "<b>"::resolvedTree
-        tree = stack
-      case "BOLDE"::stack =>
-        resolvedTree = "</b>"::resolvedTree
-        tree = stack
-      case "LISTITEMB"::stack =>
-        resolvedTree = "<li>"::resolvedTree
-        tree = stack
-      case "LISTITEME"::stack =>
-        resolvedTree = "</li>\n"::resolvedTree
-        tree = stack
-      case "HEADINGB"::stack =>
-        resolvedTree = "<h1>"::resolvedTree
-        tree = stack
-      case "HEADINGE"::stack =>
-        resolvedTree = "</h1>"::resolvedTree
-        tree = stack
-      case "NEWLINE"::stack =>
-        resolvedTree = "<br>\n"::resolvedTree
-        tree = stack
-      case "DEFB"::stack =>
-        tree = stack
-      case "EQSIGN"::stack =>
-        tree = stack.tail
-      case "DEFE"::stack =>
-        tree = stack.tail
-      case "LINKB"::stack =>
-        tree = stack
-      case "IMAGEB"::stack =>
-        tree = stack
-      case "USEB"::stack =>
-        tree = stack
-      case "USEE"::stack =>
-        resolvedTree = getContent(stack.head)::resolvedTree
-        tree = stack.tail
-      case "ADDRESSE"::stack =>
-        val linkImg = linkImage(tree)
+    while(tree.nonEmpty){
+      tree match{
+        case "DOCB" ::stack =>
+          resolvedTree = "<!DOCTYPE html>\n<html>\n<head>\n" ::resolvedTree
+          tree = stack
+        case "DOCE"::stack =>
+          resolvedTree = "</body>\n</html>"::resolvedTree
+          tree = stack
+        case "TITLEB"::stack =>
+          resolvedTree = "<title>"::resolvedTree
+          tree = stack
+        case "PARAB"::stack =>
+          resolvedTree = "<p>\n"::resolvedTree
+          tree = stack
+        case "PARAE"::stack =>
+          resolvedTree = "</p>\n"::resolvedTree
+          tree = stack
+        case "ITALICSB"::stack =>
+          resolvedTree = "<em>"::resolvedTree
+          tree = stack
+        case "ITALICSE"::stack =>
+          resolvedTree = "</em>"::resolvedTree
+          tree = stack
+        case "BOLDB"::stack =>
+          resolvedTree = "<b>"::resolvedTree
+          tree = stack
+        case "BOLDE"::stack =>
+          resolvedTree = "</b>"::resolvedTree
+          tree = stack
+        case "LISTITEMB"::stack =>
+          resolvedTree = "<li>"::resolvedTree
+          tree = stack
+        case "LISTITEME"::stack =>
+          resolvedTree = "</li>\n"::resolvedTree
+          tree = stack
+        case "HEADINGB"::stack =>
+          resolvedTree = "<h1>"::resolvedTree
+          tree = stack
+        case "HEADINGE"::stack =>
+          resolvedTree = "</h1>"::resolvedTree
+          tree = stack
+        case "NEWLINE"::stack =>
+          resolvedTree = "<br>\n"::resolvedTree
+          tree = stack
+        case "DEFB"::stack =>
+          tree = stack
+        case "EQSIGN"::stack =>
+          tree = stack.tail
+        case "DEFE"::stack =>
+          tree = stack.tail
+        case "LINKB"::stack =>
+          tree = stack
+        case "IMAGEB"::stack =>
+          tree = stack
+        case "USEB"::stack =>
+          tree = stack
+        case "USEE"::stack =>
+          resolvedTree = getContent(stack.head)::resolvedTree
+          tree = stack.tail
+        case "ADDRESSE"::stack =>
+          val linkImg = linkImage(tree)
+          val link = stack.head
+          val desc = stack.drop(3).head
+          linkImg match{
+            case 0 =>
+              resolvedTree = "<a href=" + link + ">" +desc +"</a>\n"::resolvedTree
+            case 1 =>
+              resolvedTree = "<img src="+ link +" alt=\"" + desc +"\">\n"::resolvedTree
+            case _ =>
+              println("Semantic Error - Unable to locate link or image")
+          }
+          tree = stack.drop(4)
+        case x::stack =>
+          resolvedTree = x::resolvedTree
+          tree = stack
+        case Nil => Nil
+      }
     }
+    writeHTML(resolvedTree.mkString(""))
+    openHTMLFileInBrowser(Compiler.output + ".html")
   }
+
+
 
   def getContent(s : String): String ={
     var temp = 0
@@ -115,9 +136,12 @@ class MySemanticAnalyzer {
           case "LINKB" => flag = true
             return 0
           case "IMAGEB" => flag = false
+            return 1
         }
       }
+      t = t+1
     }
+    -1
   }
 
 
