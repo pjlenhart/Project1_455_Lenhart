@@ -20,8 +20,8 @@ object Compiler{
     readFile(args(0))
 
     Scanner.getNextToken()
-    Parser.gittex()
-    SemanticAnalyzer.semantics()
+    //Parser.gittex()
+    //SemanticAnalyzer.semantics()
 
   }
 

@@ -11,7 +11,7 @@ class MySemanticAnalyzer {
   var tree : List[String] = Nil
   var resolvedTree : List[String] = Nil
   var ind = 0
-  val Scanner = new MyLexicalAnalyzer
+  tree = Compiler.Parser.parseTree.toList.reverse
 
   def semantics(): Unit = {
     while(tree.nonEmpty){
@@ -103,7 +103,7 @@ class MySemanticAnalyzer {
     var flag = false
     var answer = ""
     while(temp < tree.size -1 && !flag){
-      if(Scanner.lexems.contains(tree(temp))){
+      if(Compiler.Scanner.lexems.contains(tree(temp))){
         if(tree(temp) == "DEFE"){
           val tera = tree(temp + 3).replaceAll("\\s", "")
           if(tera == s.replaceAll("\\s","")){
@@ -131,7 +131,7 @@ class MySemanticAnalyzer {
     var t = 0
     var flag = false
     while(t < tree.size -1 && !flag){
-      if(Scanner.lexems.contains(tree(t))){
+      if(Compiler.Scanner.lexems.contains(tree(t))){
         tree(t) match{
           case "LINKB" => flag = true
             return 0
