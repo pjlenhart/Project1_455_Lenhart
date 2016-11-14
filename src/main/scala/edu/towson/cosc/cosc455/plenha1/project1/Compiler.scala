@@ -10,6 +10,7 @@ object Compiler{
   var currentToken : String = ""
   var fileContents : String = ""
   var output : String = ""
+  var pos: Int = -1
 
   val Scanner = new MyLexicalAnalyzer
   val Parser = new MySyntaxAnalyzer
@@ -20,8 +21,8 @@ object Compiler{
     readFile(args(0))
 
     Scanner.getNextToken()
-    //Parser.gittex()
-    //SemanticAnalyzer.semantics()
+    Parser.gittex()
+    SemanticAnalyzer.semantics()
 
   }
 

@@ -10,11 +10,10 @@ import scala.collection.mutable
 class MyLexicalAnalyzer extends LexicalAnalyzer {
 
   val lexems: List[String] = List("\\BEGIN", "\\END", "\\TITLE[", "]", "#", "\\PARB",
-    "\\PARE", "**", "*", "+", "\\", "[", "(", ")", "![",
-    "\\DEF[", "=", "\\USE[")
+    "\\PARE","**", "*", "+", "\\", "[", "(", ")", "![",
+    "\\DEF[", "=", "\\USE[", "\\\\")
   //a list of acceptable lexemes that are allowed by the language
-  var pos: Int = -1
-  //the index of the Big string of input
+
   var candidate: Char = ' '
   //the character in question, will be checked against the grammar
   var currentString: String = "" //the potential string which will be a token that is fully checked against the grammar
@@ -37,15 +36,18 @@ class MyLexicalAnalyzer extends LexicalAnalyzer {
 
   override def getNextToken(): Unit = {
     Compiler.Parser.isText = false
+
     if(isSpace()){
       candidate = getChar()
       while(isSpace()){
         candidate = getChar()
       }
     }
-    if(lexems.contains(candidate.toString)){
+    if(candidate.equals('=') || candidate.equals(']') || candidate.equals('[') || candidate.equals('+') ||
+        candidate.equals('(') || candidate.equals(')')) {
       Compiler.currentToken = candidate.toString
-      if(candidate.equals('=') || candidate.equals(']'))
+      if(candidate.equals('=') || candidate.equals(']') || candidate.equals('[') || candidate.equals('+') ||
+          candidate.equals('(') || candidate.equals(')'))
         candidate = getChar()
     }else if(isSpecial()){
       addChar()
@@ -57,12 +59,12 @@ class MyLexicalAnalyzer extends LexicalAnalyzer {
       if(lexems.contains(candidate.toString))
         addChar()
       if(lookup()){
-        Compiler.currentToken = currentString
+        Compiler.currentToken = currentString.toUpperCase()
         currentString = ""
         candidate = getChar()
       }else{
         println(currentString)
-        println("Lexical Error - Unrecognized Special Character")
+        println("Lexical Error " +currentString+ " - Unrecognized Special Character")
         System.exit(1)
       }
     }else if(text()){
@@ -73,6 +75,10 @@ class MyLexicalAnalyzer extends LexicalAnalyzer {
       }
       Compiler.currentToken = currentString
       currentString = ""
+    }
+    else{
+      println("Lexical Error - Unrecognized Token")
+      System.exit(1)
     }
   }
 
@@ -86,14 +92,14 @@ class MyLexicalAnalyzer extends LexicalAnalyzer {
 
   def isSpecial(): Boolean ={
     candidate match{
-      case '\\' | '*' | '#' | '+' | '[' | '!' => true
+      case '\\' | '*' | '#' | '+' | '[' | '!'  => true
       case _ => false
     }
   }
 
   def end(): Boolean ={
     candidate match{
-      case '\r' | '\n' | '[' | '\\' | ']' | '*' | ')' | '(' => true
+      case '\r' | '\n' | '[' | '\\' | ']' | '*' | ')' | '(' | ':' | '\t' | ' ' => true
       case _ => false
     }
   }
@@ -113,15 +119,15 @@ class MyLexicalAnalyzer extends LexicalAnalyzer {
         isText = true
     }
     if(candidate.equals(',') || candidate.equals('.') || candidate.equals('?') || candidate.equals('_')
-        || candidate.equals('/') || candidate.equals('\"') || candidate.equals(' ')){
+        || candidate.equals('/') || candidate.equals('\"') || candidate.equals(' ') || candidate.equals(':')){
       isText = true
     }
     isText
   }
 
   override def getChar(): Char = {
-    pos += 1
-    Compiler.fileContents.charAt(pos)
+    Compiler.pos += 1
+    Compiler.fileContents.charAt(Compiler.pos)
   }
 
 
